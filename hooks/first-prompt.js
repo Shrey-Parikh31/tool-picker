@@ -12,7 +12,9 @@ const claudeDir = process.env.CLAUDE_CONFIG_DIR || path.join(os.homedir(), '.cla
 
 const readJson = (file) => {
   try {
-    return JSON.parse(fs.readFileSync(file, 'utf8').replace(/^﻿/, ''));
+    // Some Windows editors put a byte order mark (char 0xFEFF) first, which JSON.parse rejects.
+    const text = fs.readFileSync(file, 'utf8');
+    return JSON.parse(text.charCodeAt(0) === 0xfeff ? text.slice(1) : text);
   } catch {
     return {};
   }
@@ -51,13 +53,21 @@ const toolsIn = (root, prefix = '', rootSkill = '') => [
 ];
 
 function scan(cwd) {
-  const enabled = readJson(path.join(claudeDir, 'settings.json')).enabledPlugins || {};
+  // Plugins can be switched on or off per user, per project, or in local project settings.
+  const enabled = Object.assign(
+    {},
+    ...[claudeDir, path.join(cwd, '.claude')].flatMap((dir) =>
+      ['settings.json', 'settings.local.json'].map((name) => readJson(path.join(dir, name)).enabledPlugins)
+    )
+  );
   const installed = readJson(path.join(claudeDir, 'plugins', 'installed_plugins.json')).plugins || {};
 
   // ~/.claude.json keeps this folder's own settings under projects[<folder>]. The same
   // folder can appear twice, once with / and once with \, so match on the resolved path.
-  const config = readJson(path.join(os.homedir(), '.claude.json'));
-  const samePath = (a, b) => path.resolve(a).toLowerCase() === path.resolve(b).toLowerCase();
+  // The file moves into CLAUDE_CONFIG_DIR when that is set.
+  const config = readJson(path.join(process.env.CLAUDE_CONFIG_DIR || os.homedir(), '.claude.json'));
+  const fold = (p) => (process.platform === 'win32' ? path.resolve(p).toLowerCase() : path.resolve(p));
+  const samePath = (a, b) => fold(a) === fold(b);
   const here = Object.entries(config.projects || {})
     .filter(([dir]) => samePath(dir, cwd))
     .map(([, project]) => project);
@@ -74,14 +84,19 @@ function scan(cwd) {
   for (const [id, installs] of Object.entries(installed)) {
     if (enabled[id] === false) continue;
     const name = id.split('@')[0];
-    const root = installs[0] && installs[0].installPath;
+    // An install made for another project's folder is not loaded here.
+    const install = installs.find((i) => !i.projectPath || samePath(i.projectPath, cwd));
+    const root = install && install.installPath;
     if (!root) continue;
     const found = toolsIn(root, name + ':', name);
     skills.push(...found);
     // A plugin declares its servers in .mcp.json, in plugin.json, or both.
     const mcp = readJson(path.join(root, '.mcp.json'));
-    const inManifest = readJson(path.join(root, '.claude-plugin', 'plugin.json')).mcpServers;
-    const servers = { ...(mcp.mcpServers || mcp), ...(typeof inManifest === 'object' ? inManifest : {}) };
+    // In plugin.json it is either the servers themselves or a path to a JSON file of them.
+    let inManifest = readJson(path.join(root, '.claude-plugin', 'plugin.json')).mcpServers;
+    if (typeof inManifest === 'string') inManifest = readJson(path.join(root, inManifest));
+    if (!inManifest || typeof inManifest !== 'object' || Array.isArray(inManifest)) inManifest = {};
+    const servers = { ...(mcp.mcpServers || mcp), ...(inManifest.mcpServers || inManifest) };
     connectors.push(...Object.keys(servers).map((server) => `plugin:${name}:${server}`));
     // A plugin with only hooks is always on; there is nothing in it to pick.
     if (found.length || Object.keys(servers).length) plugins.push(name);
@@ -113,6 +128,8 @@ function instruction(inv) {
 
 4. Use what the user selects, then do the task.
 
+If you cannot ask the user (a non-interactive run), choose the best fit yourself, name it in one line, and do the task.
+
 If nothing fits, say so in one line and do the task directly. Do not pad the list, and do not suggest installing anything.`;
 }
 
@@ -124,10 +141,16 @@ function main() {
 
   const prompt = (input.prompt || '').trim();
   // A slash command means the user already chose a tool; wait for a real prompt.
-  if (!prompt || prompt.startsWith('/')) return;
+  // (That is /name, not a path like /etc/hosts.) A greeting is not a task either.
+  // ponytail: fixed greeting list, English only. Widen it if small talk still triggers picks.
+  if (!prompt || /^\/[\w:-]+(\s|$)/.test(prompt)) return;
+  if (/^(hi+|hello|hey|yo|thanks|thank you|ok|okay|test)\b[\s!.?]*$/i.test(prompt)) return;
 
-  // One marker file per session so this fires on the first prompt only.
-  const id = String(input.session_id || 'unknown').replace(/[^\w-]/g, '');
+  // One marker file per session so this fires on the first prompt only. Resuming a
+  // session keeps its id, so it stays quiet then too.
+  // ponytail: markers are never deleted; they are empty files in the OS temp folder.
+  const id = String(input.session_id || '').replace(/[^\w-]/g, '');
+  if (!id) return;
   const marker = path.join(os.tmpdir(), `tool-picker-${id}`);
   if (fs.existsSync(marker)) return;
   fs.writeFileSync(marker, '');
