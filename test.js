@@ -15,11 +15,17 @@ const write = (file, data = '') => {
 };
 [home, tmp, proj].forEach((d) => fs.mkdirSync(d, { recursive: true }));
 
-const run = (prompt, session_id) =>
+const run = (prompt, session_id, env = {}) =>
   execFileSync(process.execPath, [path.join(__dirname, 'hooks', 'first-prompt.js')], {
     input: JSON.stringify({ prompt, session_id, cwd: proj }),
     encoding: 'utf8',
-    env: { ...process.env, CLAUDE_CONFIG_DIR: cfg, HOME: home, USERPROFILE: home, TEMP: tmp, TMP: tmp, TMPDIR: tmp },
+    env: {
+      ...process.env,
+      ...{ CLAUDE_CONFIG_DIR: cfg, HOME: home, USERPROFILE: home, TEMP: tmp, TMP: tmp, TMPDIR: tmp },
+      // The test itself may be run from inside Claude Code, so pin these.
+      ...{ CLAUDE_CODE_ENTRYPOINT: 'cli', TOOL_PICKER: '' },
+      ...env,
+    },
   });
 
 const plugin = (name) => path.join(dir, 'plugins', name);
@@ -61,6 +67,9 @@ assert.match(out, /TOOL PICKER/, 'first real prompt gets the instruction');
 assert.strictEqual(run('now fix it', 'a'), '', 'later prompts stay silent');
 assert.match(run('/etc/hosts is wrong', 'b'), /TOOL PICKER/, 'a prompt starting with a path is a real prompt');
 assert.strictEqual(run('review my code', undefined), '', 'no session id, no output');
+assert.strictEqual(run('review my code', 'c', { TOOL_PICKER: 'off' }), '', 'TOOL_PICKER=off silences it');
+assert.strictEqual(run('review my code', 'c', { CLAUDE_CODE_ENTRYPOINT: 'sdk-cli' }), '', 'scripted runs are skipped');
+assert.match(run('review my code', 'c'), /TOOL PICKER/, 'and neither of those used up the first prompt');
 
 // What the scan finds.
 for (const name of ['demo:in-folder', 'demo:a-command', 'demo:demo', 'plugin:demo:file-server', 'plugin:demo:manifest-server', 'local-server']) {
