@@ -112,7 +112,7 @@ function scan(cwd) {
 function instruction(inv) {
   return `TOOL PICKER: this is the first prompt of the session. Before doing any work on it:
 
-1. Inventory. A disk scan found ${inv.plugins.length} plugins, ${inv.skills.length} skills and ${inv.connectors.length} connectors:
+1. Inventory. A disk scan found these (it cannot see everything, so the list is partial):
    plugins: ${inv.plugins.join(', ') || 'none'}
    skills: ${inv.skills.join(', ') || 'none'}
    connectors: ${inv.connectors.join(', ') || 'none'}
@@ -138,6 +138,12 @@ function main() {
   try {
     input = JSON.parse(fs.readFileSync(0, 'utf8'));
   } catch {}
+
+  // Off switch, and scripted runs (claude -p), where nobody is there to pick.
+  // ponytail: CLAUDE_CODE_ENTRYPOINT is not a documented variable; observed as sdk-cli
+  // for claude -p. If it changes, scripted runs get the picker text again, nothing worse.
+  if (/^(off|0|false)$/i.test(process.env.TOOL_PICKER || '')) return;
+  if (process.env.CLAUDE_CODE_ENTRYPOINT === 'sdk-cli') return;
 
   const prompt = (input.prompt || '').trim();
   // A slash command means the user already chose a tool; wait for a real prompt.
