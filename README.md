@@ -19,7 +19,7 @@ Start a new session and type a real task, for example `review my code`.
 
 ## How it works
 
-One `UserPromptSubmit` hook, [hooks/first-prompt.js](hooks/first-prompt.js), about 140 lines with no dependencies:
+One `UserPromptSubmit` hook, [hooks/first-prompt.js](hooks/first-prompt.js), about 160 lines with no dependencies:
 
 1. **Scan.** On the first prompt of a session it reads your Claude Code config and lists the plugins, skills, slash commands and MCP servers installed for you and for the current project.
 2. **Hand over.** It adds that list to Claude's context with a short set of ranking rules: exact fit first, a purpose-built tool over a catch-all, working over needs-sign-in, no duplicates.
@@ -33,9 +33,10 @@ The matching is done by Claude, not by keyword rules, so it understands what you
 
 - **Claude Code only.** The claude.ai chat and mobile apps do not run hooks.
 - **The disk scan is incomplete.** Connectors added in your claude.ai account and Claude's built-in skills are not stored on disk. The hook tells Claude to add the ones it can see, so they can still be recommended, but the counts it reports are low.
-- **"First prompt" means first prompt after each start.** Reopening an old session triggers it again.
-- **Non-interactive runs (`claude -p`) cannot ask a question,** so Claude lists its picks and continues.
-- **Git Bash on Windows:** if hooks fail with `node: command not found`, start `claude` from PowerShell.
+- **Installing it mid-session triggers it once** on your next prompt there, because it has not seen that session before. Resumed sessions stay quiet.
+- **Greetings are skipped by a short English word list** (`hi`, `thanks`, `ok` and similar), so the picker waits for your first real task.
+- **Non-interactive runs (`claude -p`) cannot ask a question,** so Claude names its best pick in one line and continues.
+- **Node.js must be findable.** The hook also looks in `C:\Program Files\nodejs`, because Git Bash on Windows can hand hooks a shortened PATH. If Node is installed somewhere else and missing from PATH, the hook does nothing.
 
 ## Test
 
