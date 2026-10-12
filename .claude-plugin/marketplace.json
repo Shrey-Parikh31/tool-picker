@@ -1,0 +1,15 @@
+{
+  "name": "tool-picker",
+  "description": "Recommends your own installed tools on the first prompt of every chat.",
+  "owner": {
+    "name": "Shrey Parikh"
+  },
+  "plugins": [
+    {
+      "name": "tool-picker",
+      "description": "On the first prompt of every chat, recommends the best skills, connectors and plugins you already have installed.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
