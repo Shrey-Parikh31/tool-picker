@@ -1,0 +1,8 @@
+{
+  "name": "tool-picker",
+  "version": "0.1.2",
+  "description": "On the first prompt of every chat, recommends the best skills, connectors and plugins you already have installed, and lets you pick before work starts.",
+  "author": {
+    "name": "Shrey Parikh"
+  }
+}
