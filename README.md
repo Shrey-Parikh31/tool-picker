@@ -50,6 +50,16 @@ Runs on Linux, macOS and Windows on every push.
 node test.js
 ```
 
+## Accuracy test
+
+[eval/cases.json](eval/cases.json) holds 50 prompts, each with the tools that would be a correct pick (6 of them expect no pick at all). [eval/run.js](eval/run.js) sends each prompt to Claude with the hook's real instruction and scores the picks it returns.
+
+```
+node eval/run.js
+```
+
+It runs against your own Claude Code setup and uses your Claude usage: 50 short sessions, roughly 15 to 30 minutes. The expected answers were written for one machine's installed tools, so edit `cases.json` to match yours before trusting the score.
+
 ## Uninstall
 
 ```
