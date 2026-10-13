@@ -2,6 +2,10 @@
 
 A Claude Code plugin that shows you which of your installed skills, connectors and plugins fit your request, before Claude starts working.
 
+![tool-picker asking which installed connectors to use for a production check](assets/demo.svg)
+
+*Output from a real session, for the prompt "anything blowing up in prod since last night?", rendered as an image.*
+
 Claude already chooses tools by itself, but it does so silently. If you have dozens of skills and connectors installed, you rarely find out which ones it considered or skipped. tool-picker makes that choice visible: on the first prompt of each session you get up to four picks, each with a one-line reason, and you tick the ones you want used.
 
 It only recommends what you already have. It never suggests installing anything.
