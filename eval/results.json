@@ -1,0 +1,591 @@
+[
+  {
+    "prompt": "Review the changes on my current branch for bugs before I open a PR",
+    "expect": [
+      "code-review"
+    ],
+    "picks": [
+      "code-review",
+      "code-review:code-review",
+      "engineering:code-review"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Is this module over-engineered? Tell me what I can delete",
+    "expect": [
+      "ponytail-review",
+      "ponytail-audit"
+    ],
+    "picks": [
+      "ponytail:ponytail-review",
+      "ponytail:ponytail-audit",
+      "simplify"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Clean up the code I just changed and remove the duplication",
+    "expect": [
+      "simplify",
+      "ponytail"
+    ],
+    "picks": [
+      "simplify",
+      "ponytail:ponytail-review",
+      "ponytail:ponytail"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "My API returns a 500 on login and I can't figure out why",
+    "expect": [
+      "debug"
+    ],
+    "picks": [
+      "engineering:debug",
+      "claude.ai Sentry"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Production is down, help me run the incident",
+    "expect": [
+      "incident-response"
+    ],
+    "picks": [
+      "engineering:incident-response",
+      "claude.ai Sentry",
+      "engineering:debug",
+      "claude.ai Vercel"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Help me choose between a monolith and microservices for this service",
+    "expect": [
+      "architecture",
+      "system-design"
+    ],
+    "picks": [
+      "engineering:architecture",
+      "engineering:system-design",
+      "obsidian-second-brain:obsidian-panel"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Write a test plan for the checkout flow",
+    "expect": [
+      "testing-strategy"
+    ],
+    "picks": [
+      "engineering:testing-strategy"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Write the README and API docs for this package",
+    "expect": [
+      "documentation"
+    ],
+    "picks": [
+      "engineering:documentation",
+      "claude-mem:smart-explore"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Find the worst tech debt in this repo and rank it",
+    "expect": [
+      "tech-debt",
+      "ponytail-debt"
+    ],
+    "picks": [
+      "engineering:tech-debt",
+      "ponytail:ponytail-audit",
+      "ponytail:ponytail-debt"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "What did I work on yesterday? I need it for standup",
+    "expect": [
+      "standup"
+    ],
+    "picks": [
+      "engineering:standup",
+      "claude-mem:mem-search",
+      "obsidian-second-brain:obsidian-recap"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "What did we decide about the auth refactor in an earlier session?",
+    "expect": [
+      "mem-search"
+    ],
+    "picks": [
+      "claude-mem:mem-search",
+      "plugin:claude-mem:mcp-search",
+      "obsidian-second-brain:obsidian-find"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Give me a quick tour of how this codebase is organized",
+    "expect": [
+      "learn-codebase",
+      "smart-explore"
+    ],
+    "picks": [
+      "claude-mem:smart-explore",
+      "claude-mem:learn-codebase"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Plan the migration to Postgres in phases before we write any code",
+    "expect": [
+      "make-plan"
+    ],
+    "picks": [
+      "claude-mem:make-plan"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Save the key points of this chat to my Obsidian vault",
+    "expect": [
+      "obsidian-save"
+    ],
+    "picks": [
+      "obsidian-second-brain:obsidian-save"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Create today's daily note",
+    "expect": [
+      "obsidian-daily"
+    ],
+    "picks": [
+      "obsidian-second-brain:obsidian-daily"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Add 'renew passport' to my task board, due next Friday",
+    "expect": [
+      "obsidian-task"
+    ],
+    "picks": [
+      "obsidian-second-brain:obsidian-task"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Search my notes for what I wrote about vector databases",
+    "expect": [
+      "obsidian-find"
+    ],
+    "picks": [
+      "obsidian-second-brain:obsidian-find",
+      "plugin:obsidian-second-brain:vault",
+      "obsidian-second-brain:vault-deep-synthesis",
+      "claude.ai Notion"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Summarize this YouTube video for me: https://youtube.com/watch?v=abc123",
+    "expect": [
+      "youtube"
+    ],
+    "picks": [
+      "obsidian-second-brain:youtube"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Do deep research on the solid-state battery market, with citations",
+    "expect": [
+      "research"
+    ],
+    "picks": [
+      "anthropic-skills:deep-research",
+      "obsidian-second-brain:research-deep",
+      "obsidian-second-brain:research",
+      "claude.ai Firecrawl"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "What's trending on X about AI agents this week?",
+    "expect": [
+      "x-pulse"
+    ],
+    "picks": [
+      "obsidian-second-brain:x-pulse"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Poke holes in my plan to quit my job and freelance",
+    "expect": [
+      "obsidian-challenge",
+      "obsidian-panel"
+    ],
+    "picks": [
+      "obsidian-second-brain:obsidian-challenge",
+      "obsidian-second-brain:obsidian-panel"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Check my vault for broken links and stale notes",
+    "expect": [
+      "obsidian-health"
+    ],
+    "picks": [
+      "obsidian-second-brain:obsidian-health",
+      "plugin:obsidian-second-brain:vault",
+      "obsidian-second-brain:obsidian-learn"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Open this PDF so we can annotate it together",
+    "expect": [
+      "pdf-viewer"
+    ],
+    "picks": [
+      "pdf-viewer:annotate",
+      "pdf-viewer:open"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Fill in this PDF tax form for me",
+    "expect": [
+      "fill-form",
+      "anthropic-skills:pdf"
+    ],
+    "picks": [
+      "pdf-viewer:fill-form",
+      "anthropic-skills:pdf",
+      "small-business:tax-prep"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Turn these notes into a 10-slide deck",
+    "expect": [
+      "pptx"
+    ],
+    "picks": [
+      "anthropic-skills:pptx",
+      "claude-mem:wowerpoint"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Build a spreadsheet budget with formulas",
+    "expect": [
+      "xlsx"
+    ],
+    "picks": [
+      "anthropic-skills:xlsx"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Write a formal Word letter to my landlord",
+    "expect": [
+      "docx"
+    ],
+    "picks": [
+      "anthropic-skills:docx"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Plot monthly revenue by region from this CSV",
+    "expect": [
+      "viz",
+      "data:analyze"
+    ],
+    "picks": [
+      "data:create-viz",
+      "dataviz"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Write a SQL query for 30-day retention by signup cohort",
+    "expect": [
+      "write-query"
+    ],
+    "picks": [
+      "data:write-query",
+      "data:sql-queries"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "What's in this dataset? Profile it for me",
+    "expect": [
+      "explore-data"
+    ],
+    "picks": [
+      "data:explore-data",
+      "data:validate-data",
+      "data:statistical-analysis"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "What errors hit production in the last 24 hours?",
+    "expect": [
+      "sentry"
+    ],
+    "picks": [
+      "claude.ai Sentry",
+      "claude.ai Vercel",
+      "claude.ai PostHog",
+      "claude.ai Supabase"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Create a bug ticket for the login timeout and put it in this cycle",
+    "expect": [
+      "linear"
+    ],
+    "picks": [
+      "claude.ai Linear"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Add a users table with row level security to my database",
+    "expect": [
+      "supabase"
+    ],
+    "picks": [
+      "claude.ai Supabase"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "How many people signed up last week according to our product analytics?",
+    "expect": [
+      "posthog"
+    ],
+    "picks": [
+      "mcp__claude_ai_PostHog__exec",
+      "data:analyze"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Scrape the pricing pages of three competitors",
+    "expect": [
+      "firecrawl"
+    ],
+    "picks": [
+      "claude.ai Firecrawl",
+      "playwright"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Why did my last deployment fail?",
+    "expect": [
+      "vercel"
+    ],
+    "picks": [
+      "claude.ai Vercel",
+      "engineering:debug"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Build a signup form for my workshop",
+    "expect": [
+      "tally"
+    ],
+    "picks": [
+      "claude.ai Tally",
+      "artifact-capabilities",
+      "artifact-design"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Find the email from my landlord about the lease",
+    "expect": [
+      "gmail"
+    ],
+    "picks": [
+      "mcp__claude_ai_Gmail__search_threads"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Put these meeting notes in my team wiki",
+    "expect": [
+      "notion"
+    ],
+    "picks": [
+      "claude.ai Notion",
+      "plugin:productivity:atlassian"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Who owes me money? Chase the overdue invoices",
+    "expect": [
+      "invoice-chase"
+    ],
+    "picks": [
+      "small-business:invoice-chase",
+      "plugin:small-business:intuit-quickbooks",
+      "mcp__claude_ai_Gmail__create_draft"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Write a job post for a part-time barista",
+    "expect": [
+      "job-post-builder"
+    ],
+    "picks": [
+      "small-business:job-post-builder"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Every Monday at 9, check my open PRs and summarize them",
+    "expect": [
+      "schedule",
+      "loop"
+    ],
+    "picks": [
+      "schedule",
+      "plugin:engineering:github"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Stop asking me for permission every time you run git status",
+    "expect": [
+      "fewer-permission-prompts",
+      "update-config"
+    ],
+    "picks": [
+      "update-config",
+      "fewer-permission-prompts"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Write a function that calls the Claude API with streaming",
+    "expect": [
+      "claude-api"
+    ],
+    "picks": [
+      "claude-api",
+      "ponytail:ponytail"
+    ],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "What's the capital of Australia?",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Rename the variable x to count in utils.py",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Explain what a closure is in JavaScript",
+    "expect": [],
+    "picks": [
+      "claude-mem:what-the"
+    ],
+    "top1": false,
+    "any": false
+  },
+  {
+    "prompt": "Write a haiku about autumn",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "What's 15% of 2,340?",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "Translate 'good morning' into Spanish",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  }
+]
