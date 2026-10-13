@@ -62,7 +62,7 @@ node eval/run.js
 
 23 of the 50 prompts are deliberately messy: lowercase, vague, no tool named ("ugh the login thing is broken again, worked fine yesterday"), or a trap that mentions a tool but needs none. An earlier run with only direct prompts also scored 49 of 50.
 
-Read the number with care: the prompts and expected answers were written by Claude, the same model doing the picking, and a pick counts if it contains an expected name. Prompts labelled by other people would be a stronger test.
+Read the number with care: the test set is small and was not labelled independently, and a pick counts if it contains an expected name. Prompts written and labelled by other people would be a stronger test.
 
 It runs against your own Claude Code setup and uses your Claude usage: 50 short sessions, a few minutes in total. The expected answers were written for one machine's installed tools, so edit `cases.json` to match yours before trusting the score.
 
