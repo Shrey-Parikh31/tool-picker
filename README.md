@@ -58,9 +58,11 @@ node test.js
 node eval/run.js
 ```
 
-**Result on the author's machine (Claude Opus 5.5, about 130 skills and 12 connected connectors): the top pick was correct for 49 of 50 prompts.** The one miss was a tool suggested for a prompt that needed none. Full output is in [eval/results.json](eval/results.json).
+**Result on the author's machine (Claude Opus 5.5, about 130 skills and 12 connected connectors): the top pick was correct for 49 of 50 prompts, and a correct tool was in the top four for all 50.** The one miss ranked a general debugging skill above the Vercel connector for a stale-deployment prompt. Full output is in [eval/results.json](eval/results.json).
 
-Read that number with care: the prompts and expected answers were written with Claude's help, the prompts are direct, and a pick counts if it contains an expected name. Vaguer real-world prompts would score lower.
+23 of the 50 prompts are deliberately messy: lowercase, vague, no tool named ("ugh the login thing is broken again, worked fine yesterday"), or a trap that mentions a tool but needs none. An earlier run with only direct prompts also scored 49 of 50.
+
+Read the number with care: the prompts and expected answers were written by Claude, the same model doing the picking, and a pick counts if it contains an expected name. Prompts labelled by other people would be a stronger test.
 
 It runs against your own Claude Code setup and uses your Claude usage: 50 short sessions, a few minutes in total. The expected answers were written for one machine's installed tools, so edit `cases.json` to match yours before trusting the score.
 

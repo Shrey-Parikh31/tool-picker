@@ -1,26 +1,24 @@
 [
   {
-    "prompt": "Review the changes on my current branch for bugs before I open a PR",
+    "prompt": "can u look over what i did today before i push, feel like i broke something",
     "expect": [
       "code-review"
     ],
     "picks": [
-      "code-review",
-      "code-review:code-review",
-      "engineering:code-review"
+      "code-review"
     ],
     "top1": true,
     "any": true
   },
   {
-    "prompt": "Is this module over-engineered? Tell me what I can delete",
+    "prompt": "this file is like 900 lines and i only needed a toggle lol. too much?",
     "expect": [
       "ponytail-review",
-      "ponytail-audit"
+      "ponytail-audit",
+      "simplify"
     ],
     "picks": [
       "ponytail:ponytail-review",
-      "ponytail:ponytail-audit",
       "simplify"
     ],
     "top1": true,
@@ -41,27 +39,28 @@
     "any": true
   },
   {
-    "prompt": "My API returns a 500 on login and I can't figure out why",
+    "prompt": "ugh the login thing is broken again, worked fine yesterday",
     "expect": [
       "debug"
     ],
     "picks": [
       "engineering:debug",
-      "claude.ai Sentry"
+      "claude-mem:mem-search",
+      "playwright"
     ],
     "top1": true,
     "any": true
   },
   {
-    "prompt": "Production is down, help me run the incident",
+    "prompt": "site's down and customers are emailing, what do i do first",
     "expect": [
       "incident-response"
     ],
     "picks": [
       "engineering:incident-response",
-      "claude.ai Sentry",
       "engineering:debug",
-      "claude.ai Vercel"
+      "mcp__claude_ai_Sentry__search_issues",
+      "small-business:inbox-manager"
     ],
     "top1": true,
     "any": true
@@ -75,7 +74,8 @@
     "picks": [
       "engineering:architecture",
       "engineering:system-design",
-      "obsidian-second-brain:obsidian-panel"
+      "obsidian-second-brain:obsidian-panel",
+      "obsidian-second-brain:obsidian-challenge"
     ],
     "top1": true,
     "any": true
@@ -86,7 +86,8 @@
       "testing-strategy"
     ],
     "picks": [
-      "engineering:testing-strategy"
+      "engineering:testing-strategy",
+      "playwright"
     ],
     "top1": true,
     "any": true
@@ -97,8 +98,7 @@
       "documentation"
     ],
     "picks": [
-      "engineering:documentation",
-      "claude-mem:smart-explore"
+      "engineering:documentation"
     ],
     "top1": true,
     "any": true
@@ -131,7 +131,7 @@
     "any": true
   },
   {
-    "prompt": "What did we decide about the auth refactor in an earlier session?",
+    "prompt": "we talked about this like last week, something about tokens expiring, what did we land on",
     "expect": [
       "mem-search"
     ],
@@ -144,14 +144,16 @@
     "any": true
   },
   {
-    "prompt": "Give me a quick tour of how this codebase is organized",
+    "prompt": "just joined this project and im lost, where does stuff live",
     "expect": [
       "learn-codebase",
       "smart-explore"
     ],
     "picks": [
+      "claude-mem:learn-codebase",
       "claude-mem:smart-explore",
-      "claude-mem:learn-codebase"
+      "obsidian-second-brain:obsidian-architect",
+      "claude-mem:pathfinder"
     ],
     "top1": true,
     "any": true
@@ -168,7 +170,7 @@
     "any": true
   },
   {
-    "prompt": "Save the key points of this chat to my Obsidian vault",
+    "prompt": "don't want to lose this convo, stash the good bits in my notes",
     "expect": [
       "obsidian-save"
     ],
@@ -190,12 +192,15 @@
     "any": true
   },
   {
-    "prompt": "Add 'renew passport' to my task board, due next Friday",
+    "prompt": "remind me somewhere i need to renew my passport by next friday",
     "expect": [
-      "obsidian-task"
+      "obsidian-task",
+      "schedule"
     ],
     "picks": [
-      "obsidian-second-brain:obsidian-task"
+      "obsidian-second-brain:obsidian-task",
+      "productivity:task-management",
+      "schedule"
     ],
     "top1": true,
     "any": true
@@ -207,7 +212,6 @@
     ],
     "picks": [
       "obsidian-second-brain:obsidian-find",
-      "plugin:obsidian-second-brain:vault",
       "obsidian-second-brain:vault-deep-synthesis",
       "claude.ai Notion"
     ],
@@ -215,7 +219,7 @@
     "any": true
   },
   {
-    "prompt": "Summarize this YouTube video for me: https://youtube.com/watch?v=abc123",
+    "prompt": "no time to watch this, whats it about https://youtu.be/abc123",
     "expect": [
       "youtube"
     ],
@@ -226,14 +230,13 @@
     "any": true
   },
   {
-    "prompt": "Do deep research on the solid-state battery market, with citations",
+    "prompt": "need to actually understand the solid state battery space before thursday, sources pls",
     "expect": [
       "research"
     ],
     "picks": [
-      "anthropic-skills:deep-research",
-      "obsidian-second-brain:research-deep",
       "obsidian-second-brain:research",
+      "anthropic-skills:deep-research",
       "claude.ai Firecrawl"
     ],
     "top1": true,
@@ -251,7 +254,7 @@
     "any": true
   },
   {
-    "prompt": "Poke holes in my plan to quit my job and freelance",
+    "prompt": "be brutally honest, is quitting my job to freelance a dumb idea",
     "expect": [
       "obsidian-challenge",
       "obsidian-panel"
@@ -270,8 +273,7 @@
     ],
     "picks": [
       "obsidian-second-brain:obsidian-health",
-      "plugin:obsidian-second-brain:vault",
-      "obsidian-second-brain:obsidian-learn"
+      "plugin:obsidian-second-brain:vault"
     ],
     "top1": true,
     "any": true
@@ -303,7 +305,7 @@
     "any": true
   },
   {
-    "prompt": "Turn these notes into a 10-slide deck",
+    "prompt": "boss wants me to present this tmrw, can you make it into slides",
     "expect": [
       "pptx"
     ],
@@ -337,14 +339,15 @@
     "any": true
   },
   {
-    "prompt": "Plot monthly revenue by region from this CSV",
+    "prompt": "can i see how sales did per region each month, got a csv",
     "expect": [
       "viz",
       "data:analyze"
     ],
     "picks": [
+      "data:analyze",
       "data:create-viz",
-      "dataviz"
+      "data:explore-data"
     ],
     "top1": true,
     "any": true
@@ -369,19 +372,19 @@
     "picks": [
       "data:explore-data",
       "data:validate-data",
-      "data:statistical-analysis"
+      "data:statistical-analysis",
+      "data:analyze"
     ],
     "top1": true,
     "any": true
   },
   {
-    "prompt": "What errors hit production in the last 24 hours?",
+    "prompt": "anything blowing up in prod since last night?",
     "expect": [
       "sentry"
     ],
     "picks": [
       "claude.ai Sentry",
-      "claude.ai Vercel",
       "claude.ai PostHog",
       "claude.ai Supabase"
     ],
@@ -389,7 +392,7 @@
     "any": true
   },
   {
-    "prompt": "Create a bug ticket for the login timeout and put it in this cycle",
+    "prompt": "log the login timeout thing so someone picks it up this sprint",
     "expect": [
       "linear"
     ],
@@ -411,13 +414,15 @@
     "any": true
   },
   {
-    "prompt": "How many people signed up last week according to our product analytics?",
+    "prompt": "did the new onboarding actually get more ppl to sign up last week",
     "expect": [
       "posthog"
     ],
     "picks": [
-      "mcp__claude_ai_PostHog__exec",
-      "data:analyze"
+      "claude.ai PostHog",
+      "data:analyze",
+      "claude.ai Supabase",
+      "data:statistical-analysis"
     ],
     "top1": true,
     "any": true
@@ -435,15 +440,16 @@
     "any": true
   },
   {
-    "prompt": "Why did my last deployment fail?",
+    "prompt": "pushed an hour ago and the site still shows the old version??",
     "expect": [
       "vercel"
     ],
     "picks": [
+      "engineering:debug",
       "claude.ai Vercel",
-      "engineering:debug"
+      "playwright"
     ],
-    "top1": true,
+    "top1": false,
     "any": true
   },
   {
@@ -460,12 +466,12 @@
     "any": true
   },
   {
-    "prompt": "Find the email from my landlord about the lease",
+    "prompt": "my landlord sent something about the lease a while back, can you dig it up",
     "expect": [
       "gmail"
     ],
     "picks": [
-      "mcp__claude_ai_Gmail__search_threads"
+      "claude.ai Gmail"
     ],
     "top1": true,
     "any": true
@@ -483,14 +489,13 @@
     "any": true
   },
   {
-    "prompt": "Who owes me money? Chase the overdue invoices",
+    "prompt": "couple clients still havent paid me from august",
     "expect": [
       "invoice-chase"
     ],
     "picks": [
       "small-business:invoice-chase",
-      "plugin:small-business:intuit-quickbooks",
-      "mcp__claude_ai_Gmail__create_draft"
+      "claude.ai Gmail"
     ],
     "top1": true,
     "any": true
@@ -507,14 +512,13 @@
     "any": true
   },
   {
-    "prompt": "Every Monday at 9, check my open PRs and summarize them",
+    "prompt": "i keep forgetting to check my open PRs, can that just happen every monday morning",
     "expect": [
       "schedule",
       "loop"
     ],
     "picks": [
-      "schedule",
-      "plugin:engineering:github"
+      "schedule"
     ],
     "top1": true,
     "any": true
@@ -552,20 +556,18 @@
     "any": true
   },
   {
-    "prompt": "Rename the variable x to count in utils.py",
+    "prompt": "how do i write a for loop in python again",
     "expect": [],
     "picks": [],
     "top1": true,
     "any": true
   },
   {
-    "prompt": "Explain what a closure is in JavaScript",
+    "prompt": "whats the difference between a bug and an incident",
     "expect": [],
-    "picks": [
-      "claude-mem:what-the"
-    ],
-    "top1": false,
-    "any": false
+    "picks": [],
+    "top1": true,
+    "any": true
   },
   {
     "prompt": "Write a haiku about autumn",
@@ -582,7 +584,7 @@
     "any": true
   },
   {
-    "prompt": "Translate 'good morning' into Spanish",
+    "prompt": "is 'vercel' an actual word or did they make it up",
     "expect": [],
     "picks": [],
     "top1": true,
