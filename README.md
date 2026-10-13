@@ -58,7 +58,11 @@ node test.js
 node eval/run.js
 ```
 
-It runs against your own Claude Code setup and uses your Claude usage: 50 short sessions, roughly 15 to 30 minutes. The expected answers were written for one machine's installed tools, so edit `cases.json` to match yours before trusting the score.
+**Result on the author's machine (Claude Opus 5.5, about 130 skills and 12 connected connectors): the top pick was correct for 49 of 50 prompts.** The one miss was a tool suggested for a prompt that needed none. Full output is in [eval/results.json](eval/results.json).
+
+Read that number with care: the prompts and expected answers were written with Claude's help, the prompts are direct, and a pick counts if it contains an expected name. Vaguer real-world prompts would score lower.
+
+It runs against your own Claude Code setup and uses your Claude usage: 50 short sessions, a few minutes in total. The expected answers were written for one machine's installed tools, so edit `cases.json` to match yours before trusting the score.
 
 ## Uninstall
 
