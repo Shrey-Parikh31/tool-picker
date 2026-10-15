@@ -23,13 +23,15 @@ Start a new session and type a real task, for example `review my code`.
 
 ## How it works
 
-One `UserPromptSubmit` hook, [hooks/first-prompt.js](hooks/first-prompt.js), about 170 lines with no dependencies:
+One `UserPromptSubmit` hook, [hooks/first-prompt.js](hooks/first-prompt.js), about 200 lines with no dependencies:
 
 1. **Scan.** On the first prompt of a session it reads your Claude Code config and lists the plugins, skills, slash commands and MCP servers installed for you and for the current project.
 2. **Hand over.** It adds that list to Claude's context with a short set of ranking rules: exact fit first, a purpose-built tool over a catch-all, working over needs-sign-in, no duplicates.
 3. **Ask.** Claude matches your prompt against the list and asks one multi-select question. It uses what you choose, then does the task.
 
 If nothing fits, Claude says so in one line and carries on. Later prompts in the same session are left alone, and so are slash commands, since typing one means you already chose.
+
+**Duplicate skills are flagged.** If a personal or project skill has the same name as another copy on disk (another personal, project or plugin skill) and the files differ, the picker names it with the paths of every copy, so you can see that the name alone doesn't tell you which one will run. Two plugins that happen to share a skill name are not flagged, since plugin skills are already told apart by their plugin prefix.
 
 The matching is done by Claude, not by keyword rules, so it understands what you mean. The cost is a little extra context on the first prompt of each session.
 
@@ -41,6 +43,10 @@ The matching is done by Claude, not by keyword rules, so it understands what you
 - **Greetings are skipped by a short English word list** (`hi`, `thanks`, `ok` and similar), so the picker waits for your first real task.
 - **Scripted runs (`claude -p`) are skipped,** since nobody is there to pick. This relies on an undocumented environment variable, so it may stop working in a future Claude Code release.
 - **Node.js must be findable.** The hook also looks in `C:\Program Files\nodejs`, because Git Bash on Windows can hand hooks a shortened PATH. If Node is installed somewhere else and missing from PATH, the hook does nothing.
+
+## Mute a suggestion
+
+Tell Claude to stop suggesting something ("stop suggesting the wowerpoint skill") and it adds the name to `~/.claude/tool-picker-ignore.txt`. You can also edit that file yourself: one name per line, `#` for comments, matched without caring about case. A muted tool still works when you ask for it; it just stops appearing as a pick.
 
 ## Turn it off
 
@@ -56,19 +62,28 @@ node test.js
 
 ## Accuracy test
 
-[eval/cases.json](eval/cases.json) holds 50 prompts, each with the tools that would be a correct pick (6 of them expect no pick at all). [eval/run.js](eval/run.js) sends each prompt to Claude with the hook's real instruction and scores the picks it returns.
+[eval/cases.json](eval/cases.json) holds 70 prompts. 44 need a tool and list the tools that would be a correct pick; 26 need no tool at all, so the right answer is to suggest nothing. [eval/run.js](eval/run.js) sends each prompt to Claude with the hook's real instruction and scores the two groups separately, because a suggestion on a prompt that needs no tool is just friction.
 
 ```
 node eval/run.js
 ```
 
-**Result on the author's machine (Claude Opus 5.5, about 130 skills and 12 connected connectors): the top pick was correct for 49 of 50 prompts, and a correct tool was in the top four for all 50.** The one miss ranked a general debugging skill above the Vercel connector for a stale-deployment prompt. Full output is in [eval/results.json](eval/results.json).
+Latest result on the author's machine (Claude Opus 5.5, about 130 skills and 12 connected connectors):
 
-23 of the 50 prompts are deliberately messy: lowercase, vague, no tool named ("ugh the login thing is broken again, worked fine yesterday"), or a trap that mentions a tool but needs none. An earlier run with only direct prompts also scored 49 of 50.
+| | Result |
+|---|---|
+| Needs a tool: top pick correct | 44 of 44 |
+| Needs a tool: a correct pick in the top four | 44 of 44 |
+| Needs no tool: stayed silent | 22 of 26 |
+| False suggestions | 4 of 26 |
 
-Read the number with care: the test set is small and was not labelled independently, and a pick counts if it contains an expected name. Prompts written and labelled by other people would be a stronger test.
+Three of the four false suggestions picked `claude-mem:what-the` for questions like "explain big O notation like I'm 12". That skill's description is "a plain-English breakdown of something technical", so those labels are arguably wrong rather than the picks; I left the labels as they were written before the run. The clear mistake was suggesting architecture skills for "do I even need a database for a todo app only I use?". Full output is in [eval/results.json](eval/results.json).
 
-It runs against your own Claude Code setup and uses your Claude usage: 50 short sessions, a few minutes in total. The expected answers were written for one machine's installed tools, so edit `cases.json` to match yours before trusting the score.
+Many prompts are deliberately messy: lowercase, vague, no tool named ("ugh the login thing is broken again, worked fine yesterday"), or a trap that mentions a tool name but needs none ("what does the word 'sentry' mean in english").
+
+Read the numbers with care: the test set is small and was not labelled independently, and a pick counts if it contains an expected name. Prompts written and labelled by other people would be a stronger test.
+
+It runs against your own Claude Code setup and uses your Claude usage: 70 short sessions, a few minutes in total. The expected answers were written for one machine's installed tools, so edit `cases.json` to match yours before trusting the score.
 
 ## Uninstall
 

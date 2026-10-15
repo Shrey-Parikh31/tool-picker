@@ -5,7 +5,9 @@
       "code-review"
     ],
     "picks": [
-      "code-review"
+      "code-review",
+      "engineering:code-review",
+      "code-review:code-review"
     ],
     "top1": true,
     "any": true
@@ -19,7 +21,8 @@
     ],
     "picks": [
       "ponytail:ponytail-review",
-      "simplify"
+      "simplify",
+      "ponytail:ponytail"
     ],
     "top1": true,
     "any": true
@@ -46,6 +49,7 @@
     "picks": [
       "engineering:debug",
       "claude-mem:mem-search",
+      "Sentry",
       "playwright"
     ],
     "top1": true,
@@ -58,8 +62,8 @@
     ],
     "picks": [
       "engineering:incident-response",
+      "claude.ai Sentry",
       "engineering:debug",
-      "mcp__claude_ai_Sentry__search_issues",
       "small-business:inbox-manager"
     ],
     "top1": true,
@@ -72,10 +76,9 @@
       "system-design"
     ],
     "picks": [
-      "engineering:architecture",
       "engineering:system-design",
-      "obsidian-second-brain:obsidian-panel",
-      "obsidian-second-brain:obsidian-challenge"
+      "engineering:architecture",
+      "obsidian-second-brain:obsidian-panel"
     ],
     "top1": true,
     "any": true
@@ -98,7 +101,10 @@
       "documentation"
     ],
     "picks": [
-      "engineering:documentation"
+      "engineering:documentation",
+      "anthropic-skills:human-writing",
+      "claude-mem:learn-codebase",
+      "claude-mem:smart-explore"
     ],
     "top1": true,
     "any": true
@@ -164,7 +170,9 @@
       "make-plan"
     ],
     "picks": [
-      "claude-mem:make-plan"
+      "claude-mem:make-plan",
+      "engineering:system-design",
+      "engineering:architecture"
     ],
     "top1": true,
     "any": true
@@ -175,7 +183,9 @@
       "obsidian-save"
     ],
     "picks": [
-      "obsidian-second-brain:obsidian-save"
+      "obsidian-second-brain:obsidian-save",
+      "obsidian-second-brain:obsidian-log",
+      "obsidian-second-brain:obsidian-capture"
     ],
     "top1": true,
     "any": true
@@ -186,7 +196,8 @@
       "obsidian-daily"
     ],
     "picks": [
-      "obsidian-second-brain:obsidian-daily"
+      "obsidian-second-brain:obsidian-daily",
+      "plugin:obsidian-second-brain:vault"
     ],
     "top1": true,
     "any": true
@@ -200,6 +211,7 @@
     "picks": [
       "obsidian-second-brain:obsidian-task",
       "productivity:task-management",
+      "obsidian-second-brain:obsidian-calendar",
       "schedule"
     ],
     "top1": true,
@@ -212,6 +224,7 @@
     ],
     "picks": [
       "obsidian-second-brain:obsidian-find",
+      "plugin:obsidian-second-brain:vault",
       "obsidian-second-brain:vault-deep-synthesis",
       "claude.ai Notion"
     ],
@@ -235,9 +248,10 @@
       "research"
     ],
     "picks": [
-      "obsidian-second-brain:research",
       "anthropic-skills:deep-research",
-      "claude.ai Firecrawl"
+      "obsidian-second-brain:research",
+      "claude.ai Firecrawl",
+      "obsidian-second-brain:research-deep"
     ],
     "top1": true,
     "any": true
@@ -248,7 +262,9 @@
       "x-pulse"
     ],
     "picks": [
-      "obsidian-second-brain:x-pulse"
+      "obsidian-second-brain:x-pulse",
+      "obsidian-second-brain:research",
+      "claude.ai Firecrawl"
     ],
     "top1": true,
     "any": true
@@ -273,7 +289,8 @@
     ],
     "picks": [
       "obsidian-second-brain:obsidian-health",
-      "plugin:obsidian-second-brain:vault"
+      "plugin:obsidian-second-brain:vault",
+      "obsidian-second-brain:obsidian-second-brain"
     ],
     "top1": true,
     "any": true
@@ -285,7 +302,8 @@
     ],
     "picks": [
       "pdf-viewer:annotate",
-      "pdf-viewer:open"
+      "pdf-viewer:open",
+      "plugin:pdf-viewer:pdf"
     ],
     "top1": true,
     "any": true
@@ -322,7 +340,8 @@
       "xlsx"
     ],
     "picks": [
-      "anthropic-skills:xlsx"
+      "anthropic-skills:xlsx",
+      "anthropic-skills:google-workspace"
     ],
     "top1": true,
     "any": true
@@ -333,7 +352,8 @@
       "docx"
     ],
     "picks": [
-      "anthropic-skills:docx"
+      "anthropic-skills:docx",
+      "anthropic-skills:human-writing"
     ],
     "top1": true,
     "any": true
@@ -347,7 +367,8 @@
     "picks": [
       "data:analyze",
       "data:create-viz",
-      "data:explore-data"
+      "data:explore-data",
+      "dataviz"
     ],
     "top1": true,
     "any": true
@@ -371,9 +392,8 @@
     ],
     "picks": [
       "data:explore-data",
-      "data:validate-data",
       "data:statistical-analysis",
-      "data:analyze"
+      "data:validate-data"
     ],
     "top1": true,
     "any": true
@@ -386,7 +406,8 @@
     "picks": [
       "claude.ai Sentry",
       "claude.ai PostHog",
-      "claude.ai Supabase"
+      "engineering:incident-response",
+      "plugin:engineering:datadog"
     ],
     "top1": true,
     "any": true
@@ -397,7 +418,8 @@
       "linear"
     ],
     "picks": [
-      "claude.ai Linear"
+      "claude.ai Linear",
+      "plugin:productivity:atlassian"
     ],
     "top1": true,
     "any": true
@@ -408,7 +430,8 @@
       "supabase"
     ],
     "picks": [
-      "claude.ai Supabase"
+      "claude.ai Supabase",
+      "data:sql-queries"
     ],
     "top1": true,
     "any": true
@@ -421,8 +444,8 @@
     "picks": [
       "claude.ai PostHog",
       "data:analyze",
-      "claude.ai Supabase",
-      "data:statistical-analysis"
+      "data:statistical-analysis",
+      "claude.ai Supabase"
     ],
     "top1": true,
     "any": true
@@ -434,7 +457,8 @@
     ],
     "picks": [
       "claude.ai Firecrawl",
-      "playwright"
+      "playwright",
+      "anthropic-skills:chrome-browser"
     ],
     "top1": true,
     "any": true
@@ -445,11 +469,11 @@
       "vercel"
     ],
     "picks": [
-      "engineering:debug",
       "claude.ai Vercel",
+      "engineering:debug",
       "playwright"
     ],
-    "top1": false,
+    "top1": true,
     "any": true
   },
   {
@@ -471,7 +495,9 @@
       "gmail"
     ],
     "picks": [
-      "claude.ai Gmail"
+      "claude.ai Gmail",
+      "claude.ai Google Drive",
+      "obsidian-second-brain:obsidian-find"
     ],
     "top1": true,
     "any": true
@@ -483,7 +509,8 @@
     ],
     "picks": [
       "claude.ai Notion",
-      "plugin:productivity:atlassian"
+      "plugin:productivity:atlassian",
+      "claude.ai Claude Docs"
     ],
     "top1": true,
     "any": true
@@ -495,7 +522,8 @@
     ],
     "picks": [
       "small-business:invoice-chase",
-      "claude.ai Gmail"
+      "claude.ai Gmail",
+      "plugin:small-business:intuit-quickbooks"
     ],
     "top1": true,
     "any": true
@@ -506,7 +534,8 @@
       "job-post-builder"
     ],
     "picks": [
-      "small-business:job-post-builder"
+      "small-business:job-post-builder",
+      "anthropic-skills:human-writing"
     ],
     "top1": true,
     "any": true
@@ -518,7 +547,8 @@
       "loop"
     ],
     "picks": [
-      "schedule"
+      "schedule",
+      "plugin:engineering:github"
     ],
     "top1": true,
     "any": true
@@ -542,8 +572,7 @@
       "claude-api"
     ],
     "picks": [
-      "claude-api",
-      "ponytail:ponytail"
+      "claude-api"
     ],
     "top1": true,
     "any": true
@@ -585,6 +614,156 @@
   },
   {
     "prompt": "is 'vercel' an actual word or did they make it up",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "what's the difference between let and const in javascript",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "fix the typos in this: 'i will recieve the package tomorow'",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "how many days from october 15 to christmas",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "can you explain big O notation like im 12",
+    "expect": [],
+    "picks": [
+      "claude-mem:what-the"
+    ],
+    "top1": false,
+    "any": false
+  },
+  {
+    "prompt": "give me 5 names for a pet hamster",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "is python or java better as a first language",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "what does HTTP 404 mean",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "convert 72 fahrenheit to celsius",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "write a regex that matches a US zip code",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "how do i center a div in css",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "explain what git rebase does in two sentences",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "why is the sky blue",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "what's the time complexity of binary search",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "what year did the berlin wall fall",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "who wrote pride and prejudice",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "im bored, tell me a fun fact",
+    "expect": [],
+    "picks": [],
+    "top1": true,
+    "any": true
+  },
+  {
+    "prompt": "what's the difference between a process and a thread",
+    "expect": [],
+    "picks": [
+      "claude-mem:what-the"
+    ],
+    "top1": false,
+    "any": false
+  },
+  {
+    "prompt": "explain what an API key is, i keep hearing about it",
+    "expect": [],
+    "picks": [
+      "claude-mem:what-the"
+    ],
+    "top1": false,
+    "any": false
+  },
+  {
+    "prompt": "do i even need a database for a todo app only i use?",
+    "expect": [],
+    "picks": [
+      "ponytail:ponytail",
+      "engineering:system-design",
+      "engineering:architecture"
+    ],
+    "top1": false,
+    "any": false
+  },
+  {
+    "prompt": "what does the word 'sentry' mean in english",
     "expect": [],
     "picks": [],
     "top1": true,

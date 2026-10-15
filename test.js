@@ -59,6 +59,12 @@ write(path.join(cfg, '.claude.json'), {
   },
 });
 
+// The same skill as a personal and a project copy: one pair differs, one is identical.
+write(path.join(cfg, 'skills', 'drifted', 'SKILL.md'), 'old pricing formula');
+write(path.join(proj, '.claude', 'skills', 'drifted', 'SKILL.md'), 'new pricing formula');
+write(path.join(cfg, 'skills', 'twin', 'SKILL.md'), 'same');
+write(path.join(proj, '.claude', 'skills', 'twin', 'SKILL.md'), 'same');
+
 // When it fires.
 assert.strictEqual(run('/help', 'a'), '', 'slash commands are skipped');
 assert.strictEqual(run('Hi!', 'a'), '', 'greetings are skipped');
@@ -80,6 +86,19 @@ assert.ok(!out.includes('switched-off'), 'disabled connectors are skipped');
 assert.ok(!out.includes('hooksonly'), 'plugins with nothing to pick are not listed');
 assert.ok(!out.includes('other-project'), "another project's plugin is not listed");
 assert.ok(!out.includes('turned-off'), 'a plugin disabled in project settings is not listed');
+
+// Duplicate skills with different contents are flagged with their paths.
+assert.match(out, /- drifted: .*drifted.SKILL\.md \| .*drifted.SKILL\.md/, 'drifted copies are flagged');
+assert.ok(!/- twin:/.test(out), 'identical copies are not flagged');
+assert.ok(!/- in-folder:/.test(out), 'a plugin skill alone is not a duplicate');
+
+// Muted names are dropped from the inventory and listed as muted.
+write(path.join(cfg, 'tool-picker-ignore.txt'), 'plugin:demo:file-server\n# a comment\nA-COMMAND\n');
+const muted = run('review my code', 'd');
+assert.ok(!/connectors: [^\n]*file-server/.test(muted), 'a muted connector is dropped');
+assert.ok(!muted.includes('demo:a-command'), 'a muted skill is dropped, matched by bare name and any case');
+assert.match(muted, /muted these, so never recommend them: plugin:demo:file-server, A-COMMAND\./, 'muted names are listed');
+assert.ok(!/a comment/.test(muted), 'comments in the mute file are ignored');
 
 fs.rmSync(dir, { recursive: true });
 console.log('ok');

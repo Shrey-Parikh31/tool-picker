@@ -20,37 +20,51 @@ const readJson = (file) => {
   }
 };
 
-// Names of the skills in a skills/ folder (one subfolder per skill, each with a SKILL.md).
-const skillsIn = (dir, prefix = '') => {
+const list = (dir) => {
   try {
-    return fs
-      .readdirSync(dir)
-      .filter((name) => fs.existsSync(path.join(dir, name, 'SKILL.md')))
-      .map((name) => prefix + name);
+    return fs.readdirSync(dir);
   } catch {
     return [];
   }
 };
 
-// Names of the slash commands in a commands/ folder (one .md file each). Claude Code
-// lists these alongside skills, so they count as skills here too.
-const commandsIn = (dir, prefix = '') => {
-  try {
-    return fs
-      .readdirSync(dir)
-      .filter((name) => name.endsWith('.md'))
-      .map((name) => prefix + name.slice(0, -3));
-  } catch {
-    return [];
-  }
-};
-
-// Everything skill-like under one root: skills/, commands/, and a lone SKILL.md at the root.
+// Everything skill-like under one root, as { name, file }: skills/<name>/SKILL.md,
+// slash commands in commands/<name>.md (Claude Code lists these alongside skills),
+// and a lone SKILL.md at the root, named after the plugin.
 const toolsIn = (root, prefix = '', rootSkill = '') => [
-  ...skillsIn(path.join(root, 'skills'), prefix),
-  ...commandsIn(path.join(root, 'commands'), prefix),
-  ...(rootSkill && fs.existsSync(path.join(root, 'SKILL.md')) ? [prefix + rootSkill] : []),
+  ...list(path.join(root, 'skills'))
+    .map((n) => ({ name: prefix + n, file: path.join(root, 'skills', n, 'SKILL.md') }))
+    .filter((t) => fs.existsSync(t.file)),
+  ...list(path.join(root, 'commands'))
+    .filter((n) => n.endsWith('.md'))
+    .map((n) => ({ name: prefix + n.slice(0, -3), file: path.join(root, 'commands', n) })),
+  ...(rootSkill && fs.existsSync(path.join(root, 'SKILL.md'))
+    ? [{ name: prefix + rootSkill, file: path.join(root, 'SKILL.md') }]
+    : []),
 ];
+
+const bare = (name) => name.slice(name.lastIndexOf(':') + 1).toLowerCase();
+const short = (file) => file.replace(os.homedir(), '~');
+
+// Skills with the same name in several places whose files differ, so the name alone
+// does not say which copy will run. Plugin skills are namespaced (plugin:name), so two
+// plugins sharing a name is normal; a group is only flagged if an unnamespaced copy
+// (personal or project skill) is involved.
+function duplicates(tools) {
+  const groups = {};
+  for (const t of tools) (groups[bare(t.name)] ||= []).push(t);
+  return Object.entries(groups)
+    .filter(([, g]) => g.length > 1 && g.some((t) => !t.name.includes(':')))
+    .filter(([, g]) => new Set(g.map((t) => fs.readFileSync(t.file, 'utf8'))).size > 1)
+    .map(([name, g]) => ({ name, files: g.map((t) => short(t.file)) }));
+}
+
+// Names the user asked never to see again, one per line; # starts a comment.
+const ignoreFile = path.join(claudeDir, 'tool-picker-ignore.txt');
+const ignored = () =>
+  fs.existsSync(ignoreFile)
+    ? fs.readFileSync(ignoreFile, 'utf8').split(/\r?\n/).map((l) => l.replace(/#.*/, '').trim()).filter(Boolean)
+    : [];
 
 function scan(cwd) {
   // Plugins can be switched on or off per user, per project, or in local project settings.
@@ -74,7 +88,7 @@ function scan(cwd) {
   const off = new Set(here.flatMap((p) => [...(p.disabledMcpServers || []), ...(p.disabledMcpjsonServers || [])]));
 
   const plugins = [];
-  const skills = [...toolsIn(claudeDir), ...toolsIn(path.join(cwd, '.claude'))];
+  const tools = [...toolsIn(claudeDir), ...toolsIn(path.join(cwd, '.claude'))];
   const connectors = [
     ...Object.keys(config.mcpServers || {}),
     ...here.flatMap((p) => Object.keys(p.mcpServers || {})),
@@ -89,7 +103,7 @@ function scan(cwd) {
     const root = install && install.installPath;
     if (!root) continue;
     const found = toolsIn(root, name + ':', name);
-    skills.push(...found);
+    tools.push(...found);
     // A plugin declares its servers in .mcp.json, in plugin.json, or both.
     const mcp = readJson(path.join(root, '.mcp.json'));
     // In plugin.json it is either the servers themselves or a path to a JSON file of them.
@@ -106,17 +120,31 @@ function scan(cwd) {
   // claude.ai account and Claude's built-in skills are not on disk, so the instruction
   // below tells Claude to add the ones it can see in its own context. Read the
   // skills/commands paths from plugin.json if a plugin ever moves them.
-  return { plugins, skills: [...new Set(skills)], connectors: [...new Set(connectors)].filter((c) => !off.has(c)) };
+  const muted = ignored();
+  const keep = (name) => !muted.some((m) => m.toLowerCase() === name.toLowerCase() || m.toLowerCase() === bare(name));
+  return {
+    plugins: plugins.filter(keep),
+    skills: [...new Set(tools.map((t) => t.name))].filter(keep),
+    connectors: [...new Set(connectors)].filter((c) => !off.has(c) && keep(c)),
+    duplicates: duplicates(tools),
+    muted,
+  };
 }
 
 function instruction(inv) {
+  const dupes = inv.duplicates.length
+    ? `\n   These skills exist in more than one place with different contents, so the name alone does not say which copy runs:\n${inv.duplicates
+        .map((d) => `   - ${d.name}: ${d.files.join(' | ')}`)
+        .join('\n')}\n   If you pick one of them, put its paths in the reason and say the copies differ.`
+    : '';
+  const muted = inv.muted.length ? `\n   The user muted these, so never recommend them: ${inv.muted.join(', ')}.` : '';
   return `TOOL PICKER: this is the first prompt of the session. Before doing any work on it:
 
 1. Inventory. A disk scan found these (it cannot see everything, so the list is partial):
    plugins: ${inv.plugins.join(', ') || 'none'}
    skills: ${inv.skills.join(', ') || 'none'}
    connectors: ${inv.connectors.join(', ') || 'none'}
-   Add the built-in skills and account connectors listed in your own context. That combined set is everything you may recommend. Never recommend anything outside it.
+   Add the built-in skills and account connectors listed in your own context. That combined set is everything you may recommend. Never recommend anything outside it.${dupes}${muted}
 
 2. Match the user's prompt against that set, ranking in this order:
    a. Fit: its description covers this exact task, not just the general area.
@@ -130,7 +158,9 @@ function instruction(inv) {
 
 If you cannot ask the user (a non-interactive run), choose the best fit yourself, name it in one line, and do the task.
 
-If nothing fits, say so in one line and do the task directly. Do not pad the list, and do not suggest installing anything.`;
+If nothing fits, say so in one line and do the task directly. Do not pad the list, and do not suggest installing anything.
+
+If the user asks you to stop suggesting something, add its exact name on a new line of ${short(ignoreFile)} (create the file if needed). This mutes it in future sessions without disabling it.`;
 }
 
 function main() {

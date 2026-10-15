@@ -78,8 +78,16 @@ async function main() {
 
   const count = (key) => results.filter((r) => r[key]).length;
   const failed = results.filter((r) => !r.picks).length;
-  console.log(`\ntop pick correct:   ${count('top1')}/${results.length}`);
-  console.log(`correct in top 4:   ${count('any')}/${results.length}`);
+  // Prompts that need a tool and prompts that need none are scored separately: a wrong
+  // suggestion on a no-tool prompt is pure friction, so it gets its own number.
+  const need = results.filter((r) => r.expect.length);
+  const none = results.filter((r) => !r.expect.length);
+  const n = (rs, key) => rs.filter((r) => r[key]).length;
+  console.log(`\nneeds a tool, top pick correct:   ${n(need, 'top1')}/${need.length}`);
+  console.log(`needs a tool, correct in top 4:   ${n(need, 'any')}/${need.length}`);
+  console.log(`needs no tool, stayed silent:     ${n(none, 'top1')}/${none.length}`);
+  console.log(`false suggestions:                ${none.length - n(none, 'top1')}/${none.length}`);
+  console.log(`all prompts, top pick correct:    ${count('top1')}/${results.length}`);
   if (failed) console.log(`no usable answer:   ${failed} (counted as wrong)`);
   for (const r of results.filter((r) => !r.top1)) {
     console.log(`\n  ${r.prompt}\n    expected: ${r.expect.join(' | ') || '(nothing)'}\n    got:      ${r.picks ? r.picks.join(', ') || '(nothing)' : 'no answer'}`);
