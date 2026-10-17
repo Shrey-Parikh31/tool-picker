@@ -7,7 +7,7 @@
     "picks": [
       "code-review",
       "engineering:code-review",
-      "code-review:code-review"
+      "engineering:debug"
     ],
     "top1": true,
     "any": true
@@ -36,7 +36,7 @@
     "picks": [
       "simplify",
       "ponytail:ponytail-review",
-      "ponytail:ponytail"
+      "code-review"
     ],
     "top1": true,
     "any": true
@@ -49,8 +49,8 @@
     "picks": [
       "engineering:debug",
       "claude-mem:mem-search",
-      "Sentry",
-      "playwright"
+      "claude.ai Sentry",
+      "claude.ai Vercel"
     ],
     "top1": true,
     "any": true
@@ -63,8 +63,8 @@
     "picks": [
       "engineering:incident-response",
       "claude.ai Sentry",
-      "engineering:debug",
-      "small-business:inbox-manager"
+      "claude.ai Gmail",
+      "engineering:debug"
     ],
     "top1": true,
     "any": true
@@ -76,8 +76,8 @@
       "system-design"
     ],
     "picks": [
-      "engineering:system-design",
       "engineering:architecture",
+      "engineering:system-design",
       "obsidian-second-brain:obsidian-panel"
     ],
     "top1": true,
@@ -90,7 +90,7 @@
     ],
     "picks": [
       "engineering:testing-strategy",
-      "playwright"
+      "Claude Docs"
     ],
     "top1": true,
     "any": true
@@ -102,9 +102,7 @@
     ],
     "picks": [
       "engineering:documentation",
-      "anthropic-skills:human-writing",
-      "claude-mem:learn-codebase",
-      "claude-mem:smart-explore"
+      "anthropic-skills:human-writing"
     ],
     "top1": true,
     "any": true
@@ -143,8 +141,8 @@
     ],
     "picks": [
       "claude-mem:mem-search",
-      "plugin:claude-mem:mcp-search",
-      "obsidian-second-brain:obsidian-find"
+      "obsidian-second-brain:obsidian-find",
+      "claude.ai Notion"
     ],
     "top1": true,
     "any": true
@@ -158,8 +156,7 @@
     "picks": [
       "claude-mem:learn-codebase",
       "claude-mem:smart-explore",
-      "obsidian-second-brain:obsidian-architect",
-      "claude-mem:pathfinder"
+      "engineering:architecture"
     ],
     "top1": true,
     "any": true
@@ -171,8 +168,8 @@
     ],
     "picks": [
       "claude-mem:make-plan",
-      "engineering:system-design",
-      "engineering:architecture"
+      "engineering:architecture",
+      "engineering:system-design"
     ],
     "top1": true,
     "any": true
@@ -184,7 +181,7 @@
     ],
     "picks": [
       "obsidian-second-brain:obsidian-save",
-      "obsidian-second-brain:obsidian-log",
+      "claude.ai Notion",
       "obsidian-second-brain:obsidian-capture"
     ],
     "top1": true,
@@ -196,8 +193,7 @@
       "obsidian-daily"
     ],
     "picks": [
-      "obsidian-second-brain:obsidian-daily",
-      "plugin:obsidian-second-brain:vault"
+      "obsidian-second-brain:obsidian-daily"
     ],
     "top1": true,
     "any": true
@@ -211,8 +207,8 @@
     "picks": [
       "obsidian-second-brain:obsidian-task",
       "productivity:task-management",
-      "obsidian-second-brain:obsidian-calendar",
-      "schedule"
+      "Notion",
+      "Google Calendar"
     ],
     "top1": true,
     "any": true
@@ -224,9 +220,8 @@
     ],
     "picks": [
       "obsidian-second-brain:obsidian-find",
-      "plugin:obsidian-second-brain:vault",
-      "obsidian-second-brain:vault-deep-synthesis",
-      "claude.ai Notion"
+      "claude.ai Notion",
+      "obsidian-second-brain:vault-deep-synthesis"
     ],
     "top1": true,
     "any": true
@@ -237,7 +232,8 @@
       "youtube"
     ],
     "picks": [
-      "obsidian-second-brain:youtube"
+      "obsidian-second-brain:youtube",
+      "claude.ai Firecrawl"
     ],
     "top1": true,
     "any": true
@@ -264,7 +260,7 @@
     "picks": [
       "obsidian-second-brain:x-pulse",
       "obsidian-second-brain:research",
-      "claude.ai Firecrawl"
+      "Firecrawl"
     ],
     "top1": true,
     "any": true
@@ -288,9 +284,7 @@
       "obsidian-health"
     ],
     "picks": [
-      "obsidian-second-brain:obsidian-health",
-      "plugin:obsidian-second-brain:vault",
-      "obsidian-second-brain:obsidian-second-brain"
+      "obsidian-second-brain:obsidian-health"
     ],
     "top1": true,
     "any": true
@@ -303,7 +297,8 @@
     "picks": [
       "pdf-viewer:annotate",
       "pdf-viewer:open",
-      "plugin:pdf-viewer:pdf"
+      "pdf-viewer:view-pdf",
+      "anthropic-skills:pdf"
     ],
     "top1": true,
     "any": true
@@ -329,7 +324,8 @@
     ],
     "picks": [
       "anthropic-skills:pptx",
-      "claude-mem:wowerpoint"
+      "claude-mem:wowerpoint",
+      "small-business:canva-creator"
     ],
     "top1": true,
     "any": true
@@ -340,8 +336,7 @@
       "xlsx"
     ],
     "picks": [
-      "anthropic-skills:xlsx",
-      "anthropic-skills:google-workspace"
+      "anthropic-skills:xlsx"
     ],
     "top1": true,
     "any": true
@@ -367,8 +362,8 @@
     "picks": [
       "data:analyze",
       "data:create-viz",
-      "data:explore-data",
-      "dataviz"
+      "dataviz",
+      "data:explore-data"
     ],
     "top1": true,
     "any": true
@@ -392,6 +387,7 @@
     ],
     "picks": [
       "data:explore-data",
+      "data:analyze",
       "data:statistical-analysis",
       "data:validate-data"
     ],
@@ -406,8 +402,8 @@
     "picks": [
       "claude.ai Sentry",
       "claude.ai PostHog",
-      "engineering:incident-response",
-      "plugin:engineering:datadog"
+      "plugin:engineering:datadog",
+      "engineering:incident-response"
     ],
     "top1": true,
     "any": true
@@ -419,7 +415,8 @@
     ],
     "picks": [
       "claude.ai Linear",
-      "plugin:productivity:atlassian"
+      "plugin:productivity:atlassian",
+      "productivity:task-management"
     ],
     "top1": true,
     "any": true
@@ -444,8 +441,7 @@
     "picks": [
       "claude.ai PostHog",
       "data:analyze",
-      "data:statistical-analysis",
-      "claude.ai Supabase"
+      "data:statistical-analysis"
     ],
     "top1": true,
     "any": true
@@ -456,8 +452,9 @@
       "firecrawl"
     ],
     "picks": [
-      "claude.ai Firecrawl",
+      "Firecrawl",
       "playwright",
+      "anthropic-skills:built-in-browser",
       "anthropic-skills:chrome-browser"
     ],
     "top1": true,
@@ -471,7 +468,7 @@
     "picks": [
       "claude.ai Vercel",
       "engineering:debug",
-      "playwright"
+      "engineering:deploy-checklist"
     ],
     "top1": true,
     "any": true
@@ -495,9 +492,8 @@
       "gmail"
     ],
     "picks": [
-      "claude.ai Gmail",
-      "claude.ai Google Drive",
-      "obsidian-second-brain:obsidian-find"
+      "Gmail",
+      "Google Drive"
     ],
     "top1": true,
     "any": true
@@ -510,7 +506,8 @@
     "picks": [
       "claude.ai Notion",
       "plugin:productivity:atlassian",
-      "claude.ai Claude Docs"
+      "claude.ai Claude Docs",
+      "claude.ai Linear"
     ],
     "top1": true,
     "any": true
@@ -523,7 +520,8 @@
     "picks": [
       "small-business:invoice-chase",
       "claude.ai Gmail",
-      "plugin:small-business:intuit-quickbooks"
+      "plugin:small-business:intuit-quickbooks",
+      "small-business:cash-flow-snapshot"
     ],
     "top1": true,
     "any": true
@@ -534,8 +532,7 @@
       "job-post-builder"
     ],
     "picks": [
-      "small-business:job-post-builder",
-      "anthropic-skills:human-writing"
+      "small-business:job-post-builder"
     ],
     "top1": true,
     "any": true
@@ -548,7 +545,7 @@
     ],
     "picks": [
       "schedule",
-      "plugin:engineering:github"
+      "loop"
     ],
     "top1": true,
     "any": true

@@ -23,22 +23,22 @@ Start a new session and type a real task, for example `review my code`.
 
 ## How it works
 
-One `UserPromptSubmit` hook, [hooks/first-prompt.js](hooks/first-prompt.js), about 200 lines with no dependencies:
+One `UserPromptSubmit` hook, [hooks/first-prompt.js](hooks/first-prompt.js), about 160 lines with no dependencies:
 
-1. **Scan.** On the first prompt of a session it reads your Claude Code config and lists the plugins, skills, slash commands and MCP servers installed for you and for the current project.
-2. **Hand over.** It adds that list to Claude's context with a short set of ranking rules: exact fit first, a purpose-built tool over a catch-all, working over needs-sign-in, no duplicates.
-3. **Ask.** Claude matches your prompt against the list and asks one multi-select question. It uses what you choose, then does the task.
+1. **Check.** On the first prompt of a session it looks through your skill folders for drifted duplicates (below) and reads your mute list.
+2. **Hand over.** It adds a short instruction to Claude's context, about 350 tokens: match the prompt against the skills, plugins and connectors Claude can already see, using a few ranking rules (exact fit first, a purpose-built tool over a catch-all, working over needs-sign-in, no duplicates).
+3. **Ask.** Claude picks up to four and asks one multi-select question. It uses what you choose, then does the task.
 
 If nothing fits, Claude says so in one line and carries on. Later prompts in the same session are left alone, and so are slash commands, since typing one means you already chose.
 
 **Duplicate skills are flagged.** If a personal or project skill has the same name as another copy on disk (another personal, project or plugin skill) and the files differ, the picker names it with the paths of every copy, so you can see that the name alone doesn't tell you which one will run. Two plugins that happen to share a skill name are not flagged, since plugin skills are already told apart by their plugin prefix.
 
-The matching is done by Claude, not by keyword rules, so it understands what you mean. The cost is a little extra context on the first prompt of each session.
+The matching is done by Claude, not by keyword rules, so it understands what you mean. The cost is about 350 tokens on the first prompt of each session, plus the question and your answer. An earlier version also listed every installed skill by name, which tripled that; removing the list made no difference to the accuracy test below.
 
 ## Limits
 
 - **Claude Code only.** The claude.ai chat and mobile apps do not run hooks.
-- **The disk scan is incomplete.** Connectors added in your claude.ai account and Claude's built-in skills are not stored on disk. The hook tells Claude the list is partial and to add the ones it can see, so they can still be recommended.
+- **Duplicate checks only cover skill files on disk.** Copies stored inside an app's own files, such as the desktop app's runtime, are not seen.
 - **Installing it mid-session triggers it once** on your next prompt there, because it has not seen that session before. Resumed sessions stay quiet.
 - **Greetings are skipped by a short English word list** (`hi`, `thanks`, `ok` and similar), so the picker waits for your first real task.
 - **Scripted runs (`claude -p`) are skipped,** since nobody is there to pick. This relies on an undocumented environment variable, so it may stop working in a future Claude Code release.
@@ -68,7 +68,7 @@ node test.js
 node eval/run.js
 ```
 
-Latest result on the author's machine (Claude Opus 5.5, about 130 skills and 12 connected connectors):
+Result on the author's machine (Claude Opus 5.5, about 130 skills and 12 connected connectors), from the current version. Two runs scored 4 and 5 false suggestions, so expect about one prompt of difference between runs:
 
 | | Result |
 |---|---|

@@ -32,33 +32,25 @@ const plugin = (name) => path.join(dir, 'plugins', name);
 write(path.join(cfg, 'plugins', 'installed_plugins.json'), {
   plugins: {
     'demo@m': [{ scope: 'user', installPath: plugin('demo') }],
-    'hooksonly@m': [{ scope: 'user', installPath: plugin('hooksonly') }],
     'elsewhere@m': [{ scope: 'project', projectPath: path.join(dir, 'other'), installPath: plugin('elsewhere') }],
     'off@m': [{ scope: 'user', installPath: plugin('off') }],
   },
 });
-// One plugin that uses every layout the scan must find.
-write(path.join(plugin('demo'), 'skills', 'in-folder', 'SKILL.md'));
-write(path.join(plugin('demo'), 'commands', 'a-command.md'));
-write(path.join(plugin('demo'), 'commands', 'ignored.toml'));
-write(path.join(plugin('demo'), 'SKILL.md'));
-write(path.join(plugin('demo'), '.mcp.json'), { 'file-server': {} });
-write(path.join(plugin('demo'), '.claude-plugin', 'plugin.json'), { mcpServers: './servers.json' });
-write(path.join(plugin('demo'), 'servers.json'), { mcpServers: { 'manifest-server': {} } });
-write(path.join(plugin('elsewhere'), 'skills', 'other-project', 'SKILL.md'));
-write(path.join(plugin('off'), 'skills', 'turned-off', 'SKILL.md'));
+// A plugin using every layout the scan reads: skills/, commands/ and a root SKILL.md.
+write(path.join(plugin('demo'), 'skills', 'in-folder', 'SKILL.md'), 'plugin copy');
+write(path.join(plugin('demo'), 'commands', 'a-command.md'), 'plugin copy');
+write(path.join(plugin('demo'), 'commands', 'not-a-command.toml'), 'plugin copy');
+write(path.join(plugin('demo'), 'SKILL.md'), 'plugin copy');
+write(path.join(plugin('elsewhere'), 'skills', 'other-project', 'SKILL.md'), 'plugin copy');
+write(path.join(plugin('off'), 'skills', 'turned-off', 'SKILL.md'), 'plugin copy');
 // Written with a leading BOM, as some Windows editors do.
 write(path.join(proj, '.claude', 'settings.local.json'), String.fromCharCode(0xfeff) + JSON.stringify({ enabledPlugins: { 'off@m': false } }));
-// This folder's own connectors, keyed with / while the hook is given \ on Windows.
-write(path.join(cfg, '.claude.json'), {
-  projects: {
-    [proj.replace(/\\/g, '/')]: {
-      mcpServers: { 'local-server': {}, 'switched-off': {} },
-      disabledMcpServers: ['switched-off'],
-    },
-  },
-});
 
+// Personal copies that differ from each plugin copy above.
+for (const name of ['in-folder', 'demo', 'other-project', 'turned-off', 'not-a-command']) {
+  write(path.join(cfg, 'skills', name, 'SKILL.md'), 'personal copy');
+}
+write(path.join(cfg, 'commands', 'a-command.md'), 'personal copy');
 // The same skill as a personal and a project copy: one pair differs, one is identical.
 write(path.join(cfg, 'skills', 'drifted', 'SKILL.md'), 'old pricing formula');
 write(path.join(proj, '.claude', 'skills', 'drifted', 'SKILL.md'), 'new pricing formula');
@@ -77,27 +69,19 @@ assert.strictEqual(run('review my code', 'c', { TOOL_PICKER: 'off' }), '', 'TOOL
 assert.strictEqual(run('review my code', 'c', { CLAUDE_CODE_ENTRYPOINT: 'sdk-cli' }), '', 'scripted runs are skipped');
 assert.match(run('review my code', 'c'), /TOOL PICKER/, 'and neither of those used up the first prompt');
 
-// What the scan finds.
-for (const name of ['demo:in-folder', 'demo:a-command', 'demo:demo', 'plugin:demo:file-server', 'plugin:demo:manifest-server', 'local-server']) {
-  assert.ok(out.includes(name), `scan finds ${name}`);
-}
-assert.ok(!out.includes('ignored'), 'non-markdown command files are skipped');
-assert.ok(!out.includes('switched-off'), 'disabled connectors are skipped');
-assert.ok(!out.includes('hooksonly'), 'plugins with nothing to pick are not listed');
-assert.ok(!out.includes('other-project'), "another project's plugin is not listed");
-assert.ok(!out.includes('turned-off'), 'a plugin disabled in project settings is not listed');
+// Drifted duplicates are flagged with the path of every copy.
+const flagged = (name) => new RegExp('- ' + name + ': ').test(out);
+assert.match(out, /- drifted: .*drifted.SKILL\.md \| .*drifted.SKILL\.md/, 'drifted copies are flagged with paths');
+for (const name of ['in-folder', 'a-command', 'demo']) assert.ok(flagged(name), `a personal copy of plugin skill ${name} is flagged`);
+assert.ok(!flagged('twin'), 'identical copies are not flagged');
+assert.ok(!flagged('not-a-command'), 'non-markdown command files are not skills');
+assert.ok(!flagged('other-project'), "another project's plugin is not scanned");
+assert.ok(!flagged('turned-off'), 'a plugin disabled in project settings is not scanned');
 
-// Duplicate skills with different contents are flagged with their paths.
-assert.match(out, /- drifted: .*drifted.SKILL\.md \| .*drifted.SKILL\.md/, 'drifted copies are flagged');
-assert.ok(!/- twin:/.test(out), 'identical copies are not flagged');
-assert.ok(!/- in-folder:/.test(out), 'a plugin skill alone is not a duplicate');
-
-// Muted names are dropped from the inventory and listed as muted.
-write(path.join(cfg, 'tool-picker-ignore.txt'), 'plugin:demo:file-server\n# a comment\nA-COMMAND\n');
+// Muted names are listed so Claude never suggests them.
+write(path.join(cfg, 'tool-picker-ignore.txt'), 'Drifted\n# a comment\nwowerpoint\n');
 const muted = run('review my code', 'd');
-assert.ok(!/connectors: [^\n]*file-server/.test(muted), 'a muted connector is dropped');
-assert.ok(!muted.includes('demo:a-command'), 'a muted skill is dropped, matched by bare name and any case');
-assert.match(muted, /muted these, so never recommend them: plugin:demo:file-server, A-COMMAND\./, 'muted names are listed');
+assert.match(muted, /muted these, so never recommend them: Drifted, wowerpoint\./, 'muted names are listed');
 assert.ok(!/a comment/.test(muted), 'comments in the mute file are ignored');
 
 fs.rmSync(dir, { recursive: true });

@@ -66,6 +66,8 @@ const ignored = () =>
     ? fs.readFileSync(ignoreFile, 'utf8').split(/\r?\n/).map((l) => l.replace(/#.*/, '').trim()).filter(Boolean)
     : [];
 
+// Finds skill files on disk to spot drifted duplicates. Claude already sees every
+// installed tool in its own context, so the hook does not list them again.
 function scan(cwd) {
   // Plugins can be switched on or off per user, per project, or in local project settings.
   const enabled = Object.assign(
@@ -75,60 +77,19 @@ function scan(cwd) {
     )
   );
   const installed = readJson(path.join(claudeDir, 'plugins', 'installed_plugins.json')).plugins || {};
-
-  // ~/.claude.json keeps this folder's own settings under projects[<folder>]. The same
-  // folder can appear twice, once with / and once with \, so match on the resolved path.
-  // The file moves into CLAUDE_CONFIG_DIR when that is set.
-  const config = readJson(path.join(process.env.CLAUDE_CONFIG_DIR || os.homedir(), '.claude.json'));
   const fold = (p) => (process.platform === 'win32' ? path.resolve(p).toLowerCase() : path.resolve(p));
-  const samePath = (a, b) => fold(a) === fold(b);
-  const here = Object.entries(config.projects || {})
-    .filter(([dir]) => samePath(dir, cwd))
-    .map(([, project]) => project);
-  const off = new Set(here.flatMap((p) => [...(p.disabledMcpServers || []), ...(p.disabledMcpjsonServers || [])]));
 
-  const plugins = [];
   const tools = [...toolsIn(claudeDir), ...toolsIn(path.join(cwd, '.claude'))];
-  const connectors = [
-    ...Object.keys(config.mcpServers || {}),
-    ...here.flatMap((p) => Object.keys(p.mcpServers || {})),
-    ...Object.keys(readJson(path.join(cwd, '.mcp.json')).mcpServers || {}),
-  ];
-
   for (const [id, installs] of Object.entries(installed)) {
     if (enabled[id] === false) continue;
-    const name = id.split('@')[0];
     // An install made for another project's folder is not loaded here.
-    const install = installs.find((i) => !i.projectPath || samePath(i.projectPath, cwd));
-    const root = install && install.installPath;
-    if (!root) continue;
-    const found = toolsIn(root, name + ':', name);
-    tools.push(...found);
-    // A plugin declares its servers in .mcp.json, in plugin.json, or both.
-    const mcp = readJson(path.join(root, '.mcp.json'));
-    // In plugin.json it is either the servers themselves or a path to a JSON file of them.
-    let inManifest = readJson(path.join(root, '.claude-plugin', 'plugin.json')).mcpServers;
-    if (typeof inManifest === 'string') inManifest = readJson(path.join(root, inManifest));
-    if (!inManifest || typeof inManifest !== 'object' || Array.isArray(inManifest)) inManifest = {};
-    const servers = { ...(mcp.mcpServers || mcp), ...(inManifest.mcpServers || inManifest) };
-    connectors.push(...Object.keys(servers).map((server) => `plugin:${name}:${server}`));
-    // A plugin with only hooks is always on; there is nothing in it to pick.
-    if (found.length || Object.keys(servers).length) plugins.push(name);
+    const install = installs.find((i) => !i.projectPath || fold(i.projectPath) === fold(cwd));
+    if (install && install.installPath) tools.push(...toolsIn(install.installPath, id.split('@')[0] + ':', id.split('@')[0]));
   }
 
-  // ponytail: disk scan only, default folder names only. Connectors added in the user's
-  // claude.ai account and Claude's built-in skills are not on disk, so the instruction
-  // below tells Claude to add the ones it can see in its own context. Read the
-  // skills/commands paths from plugin.json if a plugin ever moves them.
-  const muted = ignored();
-  const keep = (name) => !muted.some((m) => m.toLowerCase() === name.toLowerCase() || m.toLowerCase() === bare(name));
-  return {
-    plugins: plugins.filter(keep),
-    skills: [...new Set(tools.map((t) => t.name))].filter(keep),
-    connectors: [...new Set(connectors)].filter((c) => !off.has(c) && keep(c)),
-    duplicates: duplicates(tools),
-    muted,
-  };
+  // ponytail: default folder names only. Read the skills/commands paths from plugin.json
+  // if a plugin ever moves them.
+  return { duplicates: duplicates(tools), muted: ignored() };
 }
 
 function instruction(inv) {
@@ -140,11 +101,7 @@ function instruction(inv) {
   const muted = inv.muted.length ? `\n   The user muted these, so never recommend them: ${inv.muted.join(', ')}.` : '';
   return `TOOL PICKER: this is the first prompt of the session. Before doing any work on it:
 
-1. Inventory. A disk scan found these (it cannot see everything, so the list is partial):
-   plugins: ${inv.plugins.join(', ') || 'none'}
-   skills: ${inv.skills.join(', ') || 'none'}
-   connectors: ${inv.connectors.join(', ') || 'none'}
-   Add the built-in skills and account connectors listed in your own context. That combined set is everything you may recommend. Never recommend anything outside it.${dupes}${muted}
+1. Inventory: the skills, plugins and connectors listed in your own context, including built-in skills and account connectors. That set is everything you may recommend. Never recommend anything outside it.${dupes}${muted}
 
 2. Match the user's prompt against that set, ranking in this order:
    a. Fit: its description covers this exact task, not just the general area.
